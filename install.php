@@ -83,6 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pdo = new PDO($dsnDb, $dbUser, $dbPass, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
 
         $schemaSql = file_get_contents(__DIR__ . '/installer/schema.sql');
+        $schemaSql = preg_replace('/^\xEF\xBB\xBF/', '', (string)$schemaSql);
         $statements = array_filter(array_map('trim', explode(';', (string)$schemaSql)));
         foreach ($statements as $statement) {
             if ($statement !== '') {
