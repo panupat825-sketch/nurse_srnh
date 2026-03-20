@@ -1,11 +1,10 @@
-<?php
-declare(strict_types=1);
+﻿<?php
 
-function db(array $cfg, bool $withoutDatabase = false): PDO
+function db($cfg, $withoutDatabase = false)
 {
-    static $connections = [];
+    static $connections = array();
 
-    $key = md5(json_encode([$cfg, $withoutDatabase]));
+    $key = md5(json_encode(array($cfg, $withoutDatabase)));
     if (isset($connections[$key])) {
         return $connections[$key];
     }
@@ -19,12 +18,11 @@ function db(array $cfg, bool $withoutDatabase = false): PDO
         $cfg['charset']
     );
 
-    $pdo = new PDO($dsn, $cfg['user'], $cfg['pass'], [
+    $pdo = new PDO($dsn, $cfg['user'], $cfg['pass'], array(
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    ]);
+    ));
 
     $connections[$key] = $pdo;
     return $pdo;
 }
-

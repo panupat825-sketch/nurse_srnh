@@ -27,7 +27,7 @@ try {
     );
     $stmt = $pdo->query("SELECT image_path, title FROM content_items WHERE section = 'activity' AND is_active = 1 ORDER BY sort_order, id DESC");
     $activityItems = $stmt->fetchAll();
-} catch (Throwable $e) {
+} catch (Exception $e) {
     $activityItems = [];
 }
 ?>
@@ -335,9 +335,9 @@ try {
   <div class="carousel-track" id="carouselTrack">
     <?php if (!empty($activityItems)): ?>
         <?php foreach ($activityItems as $item): ?>
-            <?php $img = trim((string)($item['image_path'] ?? '')); ?>
+            <?php $img = trim(isset($item['image_path']) ? (string)$item['image_path'] : ''); ?>
             <?php if ($img !== ''): ?>
-                <div class="carousel-slide"><img src="<?= htmlspecialchars($img, ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars((string)($item['title'] ?? 'activity'), ENT_QUOTES, 'UTF-8') ?>" onclick="openModal(this.src)"></div>
+                <div class="carousel-slide"><img src="<?= htmlspecialchars($img, ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars(isset($item['title']) ? (string)$item['title'] : 'activity', ENT_QUOTES, 'UTF-8') ?>" onclick="openModal(this.src)"></div>
             <?php endif; ?>
         <?php endforeach; ?>
     <?php else: ?>

@@ -1,18 +1,17 @@
 ﻿<?php
-declare(strict_types=1);
 
 require_once __DIR__ . '/../bootstrap.php';
 require_once __DIR__ . '/../lib/content_repository.php';
 
 require_admin_login();
 
-$action = $_GET['action'] ?? 'list';
+$action = isset($_GET['action']) ? $_GET['action'] : 'list';
 $id = isset($_GET['id']) ? (int)$_GET['id'] : null;
-$sectionFilter = trim((string)($_GET['section'] ?? ''));
+$sectionFilter = trim(isset($_GET['section']) ? (string)$_GET['section'] : '');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['save'])) {
-        $editId = isset($_POST['id']) && $_POST['id'] !== '' ? (int)$_POST['id'] : null;
+        $editId = (isset($_POST['id']) && $_POST['id'] !== '') ? (int)$_POST['id'] : null;
         save_content($db, $_POST, $editId);
         flash('success', $editId ? 'แก้ไขข้อมูลเรียบร้อยแล้ว' : 'เพิ่มข้อมูลเรียบร้อยแล้ว');
         redirect('/nurse_srnh/admin/content.php');
@@ -47,37 +46,37 @@ include __DIR__ . '/_header.php';
             <div class="card-body">
                 <h1 class="h5 mb-3"><?= $editItem ? 'แก้ไขข้อมูล' : 'เพิ่มข้อมูลใหม่' ?></h1>
                 <form method="post">
-                    <input type="hidden" name="id" value="<?= h($editItem['id'] ?? '') ?>">
+                    <input type="hidden" name="id" value="<?= h(isset($editItem['id']) ? $editItem['id'] : '') ?>">
                     <div class="mb-2">
                         <label class="form-label">Section (มิติข้อมูล)</label>
-                        <input class="form-control" name="section" value="<?= h($editItem['section'] ?? '') ?>" placeholder="example: menu, activity, service" required>
+                        <input class="form-control" name="section" value="<?= h(isset($editItem['section']) ? $editItem['section'] : '') ?>" placeholder="example: menu, activity, service" required>
                     </div>
                     <div class="mb-2">
                         <label class="form-label">Title</label>
-                        <input class="form-control" name="title" value="<?= h($editItem['title'] ?? '') ?>" required>
+                        <input class="form-control" name="title" value="<?= h(isset($editItem['title']) ? $editItem['title'] : '') ?>" required>
                     </div>
                     <div class="mb-2">
                         <label class="form-label">Subtitle</label>
-                        <input class="form-control" name="subtitle" value="<?= h($editItem['subtitle'] ?? '') ?>">
+                        <input class="form-control" name="subtitle" value="<?= h(isset($editItem['subtitle']) ? $editItem['subtitle'] : '') ?>">
                     </div>
                     <div class="mb-2">
                         <label class="form-label">Body</label>
-                        <textarea class="form-control" name="body" rows="3"><?= h($editItem['body'] ?? '') ?></textarea>
+                        <textarea class="form-control" name="body" rows="3"><?= h(isset($editItem['body']) ? $editItem['body'] : '') ?></textarea>
                     </div>
                     <div class="mb-2">
                         <label class="form-label">URL</label>
-                        <input class="form-control" name="url" value="<?= h($editItem['url'] ?? '') ?>">
+                        <input class="form-control" name="url" value="<?= h(isset($editItem['url']) ? $editItem['url'] : '') ?>">
                     </div>
                     <div class="mb-2">
                         <label class="form-label">Image Path</label>
-                        <input class="form-control" name="image_path" value="<?= h($editItem['image_path'] ?? '') ?>" placeholder="img/... หรือ activity/...">
+                        <input class="form-control" name="image_path" value="<?= h(isset($editItem['image_path']) ? $editItem['image_path'] : '') ?>" placeholder="img/... หรือ activity/...">
                     </div>
                     <div class="mb-2">
                         <label class="form-label">Sort Order</label>
-                        <input class="form-control" type="number" name="sort_order" value="<?= h((string)($editItem['sort_order'] ?? 0)) ?>">
+                        <input class="form-control" type="number" name="sort_order" value="<?= h((string)(isset($editItem['sort_order']) ? $editItem['sort_order'] : 0)) ?>">
                     </div>
                     <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" name="is_active" id="is_active" <?= !isset($editItem['is_active']) || (int)$editItem['is_active'] === 1 ? 'checked' : '' ?>>
+                        <input class="form-check-input" type="checkbox" name="is_active" id="is_active" <?= (!isset($editItem['is_active']) || (int)$editItem['is_active'] === 1) ? 'checked' : '' ?>>
                         <label class="form-check-label" for="is_active">แสดงผล (Active)</label>
                     </div>
                     <div class="d-flex gap-2">

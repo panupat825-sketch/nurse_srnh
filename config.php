@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 return [
     'app_name' => 'Nurse SRNH CMS',
@@ -15,4 +14,3 @@ return [
         'session_name' => 'nurse_srnh_session',
     ],
 ];
-

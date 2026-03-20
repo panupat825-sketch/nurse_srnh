@@ -1,16 +1,15 @@
 ﻿<?php
-declare(strict_types=1);
 
 require_once __DIR__ . '/bootstrap.php';
 require_once __DIR__ . '/lib/content_repository.php';
 
-$section = trim((string)($_GET['section'] ?? ''));
+$section = trim(isset($_GET['section']) ? (string)$_GET['section'] : '');
 if ($section === '') {
     $section = 'menu';
 }
 
 $stmt = $db->prepare('SELECT * FROM content_items WHERE section = :section AND is_active = 1 ORDER BY sort_order, id DESC');
-$stmt->execute(['section' => $section]);
+$stmt->execute(array('section' => $section));
 $items = $stmt->fetchAll();
 ?>
 <!DOCTYPE html>

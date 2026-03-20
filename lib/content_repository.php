@@ -1,13 +1,13 @@
-<?php
-declare(strict_types=1);
+﻿<?php
 
-function get_sections(PDO $db): array
+function get_sections($db)
 {
     $sql = "SELECT DISTINCT section FROM content_items ORDER BY section";
-    return $db->query($sql)->fetchAll(PDO::FETCH_COLUMN) ?: [];
+    $rows = $db->query($sql)->fetchAll(PDO::FETCH_COLUMN);
+    return $rows ? $rows : array();
 }
 
-function get_contents(PDO $db, ?string $section = null): array
+function get_contents($db, $section = null)
 {
     if ($section === null || $section === '') {
         $stmt = $db->query("SELECT * FROM content_items ORDER BY section, sort_order, id DESC");
@@ -15,30 +15,30 @@ function get_contents(PDO $db, ?string $section = null): array
     }
 
     $stmt = $db->prepare("SELECT * FROM content_items WHERE section = :section ORDER BY sort_order, id DESC");
-    $stmt->execute(['section' => $section]);
+    $stmt->execute(array('section' => $section));
     return $stmt->fetchAll();
 }
 
-function get_content(PDO $db, int $id): ?array
+function get_content($db, $id)
 {
     $stmt = $db->prepare("SELECT * FROM content_items WHERE id = :id");
-    $stmt->execute(['id' => $id]);
+    $stmt->execute(array('id' => (int)$id));
     $row = $stmt->fetch();
-    return $row ?: null;
+    return $row ? $row : null;
 }
 
-function save_content(PDO $db, array $data, ?int $id = null): void
+function save_content($db, $data, $id = null)
 {
-    $payload = [
-        'section' => trim((string) ($data['section'] ?? 'general')),
-        'title' => trim((string) ($data['title'] ?? '')),
-        'subtitle' => trim((string) ($data['subtitle'] ?? '')),
-        'body' => trim((string) ($data['body'] ?? '')),
-        'url' => trim((string) ($data['url'] ?? '')),
-        'image_path' => trim((string) ($data['image_path'] ?? '')),
-        'sort_order' => (int) ($data['sort_order'] ?? 0),
+    $payload = array(
+        'section' => trim(isset($data['section']) ? (string)$data['section'] : 'general'),
+        'title' => trim(isset($data['title']) ? (string)$data['title'] : ''),
+        'subtitle' => trim(isset($data['subtitle']) ? (string)$data['subtitle'] : ''),
+        'body' => trim(isset($data['body']) ? (string)$data['body'] : ''),
+        'url' => trim(isset($data['url']) ? (string)$data['url'] : ''),
+        'image_path' => trim(isset($data['image_path']) ? (string)$data['image_path'] : ''),
+        'sort_order' => (int)(isset($data['sort_order']) ? $data['sort_order'] : 0),
         'is_active' => isset($data['is_active']) ? 1 : 0,
-    ];
+    );
 
     if ($id === null) {
         $stmt = $db->prepare(
@@ -51,7 +51,7 @@ function save_content(PDO $db, array $data, ?int $id = null): void
         return;
     }
 
-    $payload['id'] = $id;
+    $payload['id'] = (int)$id;
     $stmt = $db->prepare(
         "UPDATE content_items SET
             section = :section,
@@ -68,29 +68,28 @@ function save_content(PDO $db, array $data, ?int $id = null): void
     $stmt->execute($payload);
 }
 
-function delete_content(PDO $db, int $id): void
+function delete_content($db, $id)
 {
     $stmt = $db->prepare("DELETE FROM content_items WHERE id = :id");
-    $stmt->execute(['id' => $id]);
+    $stmt->execute(array('id' => (int)$id));
 }
 
-function get_settings(PDO $db): array
+function get_settings($db)
 {
     $rows = $db->query("SELECT setting_key, setting_value FROM settings ORDER BY setting_key")->fetchAll();
-    $settings = [];
+    $settings = array();
     foreach ($rows as $row) {
         $settings[$row['setting_key']] = $row['setting_value'];
     }
     return $settings;
 }
 
-function upsert_setting(PDO $db, string $key, string $value): void
+function upsert_setting($db, $key, $value)
 {
     $stmt = $db->prepare(
         "INSERT INTO settings (setting_key, setting_value, updated_at)
          VALUES (:key, :value, NOW())
          ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value), updated_at = NOW()"
     );
-    $stmt->execute(['key' => $key, 'value' => $value]);
+    $stmt->execute(array('key' => $key, 'value' => $value));
 }
-

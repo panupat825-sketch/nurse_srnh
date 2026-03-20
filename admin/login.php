@@ -1,5 +1,4 @@
 ﻿<?php
-declare(strict_types=1);
 
 require_once __DIR__ . '/../bootstrap.php';
 
@@ -10,11 +9,11 @@ if (is_admin_logged_in()) {
 $error = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = trim((string)($_POST['username'] ?? ''));
-    $password = (string)($_POST['password'] ?? '');
+    $username = trim(isset($_POST['username']) ? (string)$_POST['username'] : '');
+    $password = isset($_POST['password']) ? (string)$_POST['password'] : '';
 
     $stmt = $db->prepare('SELECT id, username, password_hash FROM admins WHERE username = :username LIMIT 1');
-    $stmt->execute(['username' => $username]);
+    $stmt->execute(array('username' => $username));
     $admin = $stmt->fetch();
 
     if ($admin && password_verify($password, $admin['password_hash'])) {

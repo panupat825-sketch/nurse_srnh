@@ -1,30 +1,29 @@
-<?php
-declare(strict_types=1);
+﻿<?php
 
-function h(?string $value): string
+function h($value)
 {
-    return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
+    return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
 }
 
-function redirect(string $path): void
+function redirect($path)
 {
     header('Location: ' . $path);
     exit;
 }
 
-function is_admin_logged_in(): bool
+function is_admin_logged_in()
 {
     return !empty($_SESSION['admin_id']);
 }
 
-function require_admin_login(): void
+function require_admin_login()
 {
     if (!is_admin_logged_in()) {
         redirect('/nurse_srnh/admin/login.php');
     }
 }
 
-function flash(string $key, ?string $value = null): ?string
+function flash($key, $value = null)
 {
     if ($value !== null) {
         $_SESSION['_flash'][$key] = $value;
@@ -39,4 +38,3 @@ function flash(string $key, ?string $value = null): ?string
     unset($_SESSION['_flash'][$key]);
     return $message;
 }
-

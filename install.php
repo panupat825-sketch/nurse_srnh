@@ -1,29 +1,28 @@
 ﻿<?php
-declare(strict_types=1);
 
 $baseConfig = require __DIR__ . '/config.php';
 $defaultDb = $baseConfig['db'];
 $message = null;
 $error = null;
 
-function write_local_config(array $db): void
+function write_local_config($db)
 {
-    $export = var_export([
-        'db' => [
+    $export = var_export(array(
+        'db' => array(
             'host' => $db['host'],
             'port' => (int)$db['port'],
             'name' => $db['name'],
             'user' => $db['user'],
             'pass' => $db['pass'],
             'charset' => 'utf8mb4',
-        ],
-    ], true);
+        ),
+    ), true);
 
     $content = "<?php\nreturn " . $export . ";\n";
     file_put_contents(__DIR__ . '/config.local.php', $content);
 }
 
-function seed_defaults(PDO $pdo): void
+function seed_defaults($pdo)
 {
     $settingStmt = $pdo->prepare(
         "INSERT INTO settings (setting_key, setting_value, updated_at)
@@ -31,17 +30,17 @@ function seed_defaults(PDO $pdo): void
          ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value), updated_at = NOW()"
     );
 
-    $settings = [
+    $settings = array(
         'site_title' => 'Nurse SRNH',
         'site_subtitle' => 'Content Management System',
         'contact_address' => '182 M.15 Sikeaw Sirattana Sisaket',
         'contact_phone' => '045677014',
         'contact_email' => 'admin@example.com',
         'facebook_url' => 'https://www.facebook.com/sirattanahosp/',
-    ];
+    );
 
     foreach ($settings as $k => $v) {
-        $settingStmt->execute(['k' => $k, 'v' => $v]);
+        $settingStmt->execute(array('k' => $k, 'v' => $v));
     }
 
     $contentStmt = $pdo->prepare(
@@ -51,13 +50,13 @@ function seed_defaults(PDO $pdo): void
 
     $existing = (int)$pdo->query("SELECT COUNT(*) FROM content_items")->fetchColumn();
     if ($existing === 0) {
-        $seedRows = [
-            ['section' => 'menu', 'title' => 'HOME', 'subtitle' => '', 'body' => 'ลิงก์หน้าแรก', 'url' => 'index.php', 'image_path' => '', 'sort_order' => 1, 'is_active' => 1],
-            ['section' => 'menu', 'title' => 'CONTACT', 'subtitle' => '', 'body' => 'หน้าติดต่อ', 'url' => 'contact.php', 'image_path' => '', 'sort_order' => 2, 'is_active' => 1],
-            ['section' => 'activity', 'title' => 'กิจกรรมตัวอย่าง 1', 'subtitle' => '', 'body' => 'อัปเดตได้จากหลังบ้าน', 'url' => '', 'image_path' => 'activity/activity1.jpg', 'sort_order' => 1, 'is_active' => 1],
-            ['section' => 'activity', 'title' => 'กิจกรรมตัวอย่าง 2', 'subtitle' => '', 'body' => 'เพิ่มได้ไม่จำกัดรายการ', 'url' => '', 'image_path' => 'activity/activity2.jpg', 'sort_order' => 2, 'is_active' => 1],
-            ['section' => 'service', 'title' => 'THAILAND NURSING DIGITAL PLATFORM', 'subtitle' => '', 'body' => '', 'url' => 'https://www.don.go.th/nperson/app/index.php/member/login', 'image_path' => '', 'sort_order' => 1, 'is_active' => 1],
-        ];
+        $seedRows = array(
+            array('section' => 'menu', 'title' => 'HOME', 'subtitle' => '', 'body' => 'ลิงก์หน้าแรก', 'url' => 'index.php', 'image_path' => '', 'sort_order' => 1, 'is_active' => 1),
+            array('section' => 'menu', 'title' => 'CONTACT', 'subtitle' => '', 'body' => 'หน้าติดต่อ', 'url' => 'contact.php', 'image_path' => '', 'sort_order' => 2, 'is_active' => 1),
+            array('section' => 'activity', 'title' => 'กิจกรรมตัวอย่าง 1', 'subtitle' => '', 'body' => 'อัปเดตได้จากหลังบ้าน', 'url' => '', 'image_path' => 'activity/activity1.jpg', 'sort_order' => 1, 'is_active' => 1),
+            array('section' => 'activity', 'title' => 'กิจกรรมตัวอย่าง 2', 'subtitle' => '', 'body' => 'เพิ่มได้ไม่จำกัดรายการ', 'url' => '', 'image_path' => 'activity/activity2.jpg', 'sort_order' => 2, 'is_active' => 1),
+            array('section' => 'service', 'title' => 'THAILAND NURSING DIGITAL PLATFORM', 'subtitle' => '', 'body' => '', 'url' => 'https://www.don.go.th/nperson/app/index.php/member/login', 'image_path' => '', 'sort_order' => 1, 'is_active' => 1),
+        );
 
         foreach ($seedRows as $row) {
             $contentStmt->execute($row);
@@ -66,22 +65,22 @@ function seed_defaults(PDO $pdo): void
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $dbHost = trim((string)($_POST['db_host'] ?? $defaultDb['host']));
-    $dbPort = (int)($_POST['db_port'] ?? $defaultDb['port']);
-    $dbName = trim((string)($_POST['db_name'] ?? $defaultDb['name']));
-    $dbUser = trim((string)($_POST['db_user'] ?? $defaultDb['user']));
-    $dbPass = (string)($_POST['db_pass'] ?? $defaultDb['pass']);
+    $dbHost = trim(isset($_POST['db_host']) ? (string)$_POST['db_host'] : $defaultDb['host']);
+    $dbPort = (int)(isset($_POST['db_port']) ? $_POST['db_port'] : $defaultDb['port']);
+    $dbName = trim(isset($_POST['db_name']) ? (string)$_POST['db_name'] : $defaultDb['name']);
+    $dbUser = trim(isset($_POST['db_user']) ? (string)$_POST['db_user'] : $defaultDb['user']);
+    $dbPass = isset($_POST['db_pass']) ? (string)$_POST['db_pass'] : $defaultDb['pass'];
 
-    $adminUser = trim((string)($_POST['admin_user'] ?? 'admin'));
-    $adminPass = (string)($_POST['admin_pass'] ?? 'admin1234');
+    $adminUser = trim(isset($_POST['admin_user']) ? (string)$_POST['admin_user'] : 'admin');
+    $adminPass = isset($_POST['admin_pass']) ? (string)$_POST['admin_pass'] : 'admin1234';
 
     try {
         $dsnNoDb = sprintf('mysql:host=%s;port=%d;charset=utf8mb4', $dbHost, $dbPort);
-        $rootPdo = new PDO($dsnNoDb, $dbUser, $dbPass, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+        $rootPdo = new PDO($dsnNoDb, $dbUser, $dbPass, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
         $rootPdo->exec("CREATE DATABASE IF NOT EXISTS `{$dbName}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 
         $dsnDb = sprintf('mysql:host=%s;port=%d;dbname=%s;charset=utf8mb4', $dbHost, $dbPort, $dbName);
-        $pdo = new PDO($dsnDb, $dbUser, $dbPass, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+        $pdo = new PDO($dsnDb, $dbUser, $dbPass, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
 
         $schemaSql = file_get_contents(__DIR__ . '/installer/schema.sql');
         $statements = array_filter(array_map('trim', explode(';', (string)$schemaSql)));
@@ -97,19 +96,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
              VALUES (:username, :password_hash, NOW())
              ON DUPLICATE KEY UPDATE password_hash = VALUES(password_hash)"
         );
-        $stmt->execute(['username' => $adminUser, 'password_hash' => $hash]);
+        $stmt->execute(array('username' => $adminUser, 'password_hash' => $hash));
 
         seed_defaults($pdo);
-        write_local_config([
+        write_local_config(array(
             'host' => $dbHost,
             'port' => $dbPort,
             'name' => $dbName,
             'user' => $dbUser,
             'pass' => $dbPass,
-        ]);
+        ));
 
         $message = 'ติดตั้งสำเร็จแล้ว สามารถเข้าใช้งานที่ /nurse_srnh/admin/login.php';
-    } catch (Throwable $e) {
+    } catch (Exception $e) {
         $error = $e->getMessage();
     }
 }
