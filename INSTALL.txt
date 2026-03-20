@@ -1,0 +1,32 @@
+﻿Nurse SRNH CMS - Installation Guide
+===================================
+
+1) Start web server (Apache/XAMPP or PHP built-in)
+   - Option A: Open installer\run_installer.bat
+   - Option B: run `php -S 127.0.0.1:8080 -t c:\nurse_srnh`
+
+2) Open installer page
+   - http://127.0.0.1:8080/install.php
+
+3) Fill DB connection and admin credentials
+   - Installer will create:
+     - Database
+     - Tables (admins, settings, content_items)
+     - Default settings and sample content
+
+4) Login admin
+   - http://127.0.0.1:8080/admin/login.php
+
+5) CRUD usage
+   - Manage all dimensions/sections in:
+     - /admin/content.php
+   - Manage global site settings in:
+     - /admin/settings.php
+
+6) Security
+   - Remove or block access to install.php after successful installation.
+
+Generated installer files:
+- install.php (web installer)
+- installer/schema.sql (DB schema)
+- installer/run_installer.bat (quick start)

@@ -1,0 +1,18 @@
+Nurse SRNH Website + CMS
+========================
+
+This project now includes:
+- Admin authentication
+- Full CRUD for multi-dimensional content via `section`
+- Site settings editor
+- Installer files for database bootstrap
+
+Important files:
+- `install.php`
+- `installer/schema.sql`
+- `installer/run_installer.bat`
+- `admin/login.php`
+- `admin/content.php`
+- `admin/settings.php`
+
+Installation steps are documented in `INSTALL.txt`.
