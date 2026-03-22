@@ -6,16 +6,16 @@ require_once __DIR__ . '/../lib/content_repository.php';
 require_admin_login();
 
 $keys = array(
-    'site_title',
-    'site_subtitle',
-    'contact_address',
-    'contact_phone',
-    'contact_email',
-    'facebook_url',
+    'site_title' => 'ชื่อเว็บไซต์',
+    'site_subtitle' => 'คำอธิบายสั้น',
+    'contact_address' => 'ที่อยู่',
+    'contact_phone' => 'เบอร์โทร',
+    'contact_email' => 'อีเมล',
+    'facebook_url' => 'ลิงก์ Facebook',
 );
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    foreach ($keys as $key) {
+    foreach ($keys as $key => $label) {
         $value = trim(isset($_POST[$key]) ? (string)$_POST[$key] : '');
         upsert_setting($db, $key, $value);
     }
@@ -29,22 +29,31 @@ $success = flash('success');
 $title = 'Settings';
 include __DIR__ . '/_header.php';
 ?>
+
+<div class="mb-3">
+    <h1 class="page-title h3 mb-1">Settings</h1>
+    <p class="text-soft mb-0">ตั้งค่าข้อมูลภาพรวมเว็บไซต์จากจุดเดียว</p>
+</div>
+
 <?php if ($success): ?>
-    <div class="alert alert-success"><?= h($success) ?></div>
+    <div class="alert alert-success glass-card border-0"><?= h($success) ?></div>
 <?php endif; ?>
 
-<div class="card shadow-sm">
-    <div class="card-body">
-        <h1 class="h5 mb-3">ตั้งค่าระบบ</h1>
-        <form method="post">
-            <?php foreach ($keys as $key): ?>
-                <div class="mb-3">
-                    <label class="form-label"><?= h($key) ?></label>
+<div class="glass-card p-4">
+    <form method="post">
+        <div class="row g-3">
+            <?php foreach ($keys as $key => $label): ?>
+                <div class="col-md-6">
+                    <label class="form-label"><?= h($label) ?> <span class="text-muted small">(<?= h($key) ?>)</span></label>
                     <input class="form-control" name="<?= h($key) ?>" value="<?= h(isset($settings[$key]) ? $settings[$key] : '') ?>">
                 </div>
             <?php endforeach; ?>
-            <button class="btn btn-primary" type="submit">บันทึก</button>
-        </form>
-    </div>
+        </div>
+        <div class="mt-4 d-flex gap-2">
+            <button class="btn btn-brand" type="submit">บันทึกการตั้งค่า</button>
+            <a href="/nurse_srnh/admin/dashboard.php" class="btn btn-outline-secondary">กลับ Dashboard</a>
+        </div>
+    </form>
 </div>
+
 <?php include __DIR__ . '/_footer.php'; ?>

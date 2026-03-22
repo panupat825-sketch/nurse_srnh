@@ -1,0 +1,153 @@
+﻿#personnelPage .btn.active {
+    box-shadow: 0 0 0 .2rem rgba(11, 93, 91, .2);
+}
+
+#canvasWrapper {
+    position: relative;
+    border: 1px dashed #b8cdcb;
+    border-radius: 14px;
+    background:
+        linear-gradient(0deg, rgba(245, 251, 250, .9), rgba(245, 251, 250, .9)),
+        linear-gradient(90deg, rgba(11, 93, 91, .06) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(11, 93, 91, .06) 1px, transparent 1px);
+    background-size: auto, 24px 24px, 24px 24px;
+    overflow: auto;
+    min-height: 700px;
+}
+
+#personnelCanvas {
+    position: relative;
+    min-height: 700px;
+    min-width: 100%;
+}
+
+.personnel-card {
+    position: absolute;
+    width: 235px;
+    border: 1px solid #d9e5e4;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 8px 20px rgba(12, 43, 52, .08);
+    padding: .65rem;
+    cursor: move;
+    transition: box-shadow .2s ease, transform .2s ease;
+    user-select: none;
+    z-index: 10;
+}
+
+.personnel-card:hover {
+    box-shadow: 0 14px 28px rgba(10, 42, 51, .12);
+    transform: translateY(-1px);
+}
+
+.personnel-card.link-source {
+    border-color: #ef7d32;
+    box-shadow: 0 0 0 .2rem rgba(239, 125, 50, .18);
+}
+
+.personnel-card-head {
+    display: flex;
+    gap: .6rem;
+}
+
+.personnel-avatar {
+    width: 54px;
+    height: 54px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #d8e4e2;
+    flex-shrink: 0;
+    background: #f4faf8;
+}
+
+.personnel-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.personnel-avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #0b5d5b;
+    font-size: 1.15rem;
+}
+
+.personnel-main {
+    min-width: 0;
+    flex: 1;
+}
+
+.personnel-name {
+    font-weight: 700;
+    color: #203140;
+    line-height: 1.2;
+    word-break: break-word;
+}
+
+.personnel-position {
+    font-size: .88rem;
+    color: #0c5b59;
+    margin-top: 2px;
+}
+
+.personnel-meta {
+    font-size: .78rem;
+    color: #607382;
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.personnel-meta .dot {
+    margin: 0 4px;
+}
+
+.personnel-card-foot {
+    margin-top: .45rem;
+    border-top: 1px dashed #d5e3e1;
+    padding-top: .45rem;
+}
+
+.personnel-upload-box {
+    background: #f7fbfb;
+    border: 1px dashed #bdd9d6;
+}
+
+.current-image-preview {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid #d2e2df;
+}
+
+.connection-list {
+    max-height: 560px;
+    overflow: auto;
+}
+
+.connection-item {
+    border: 1px solid #dce7e6;
+    border-radius: 10px;
+    background: #fff;
+    padding: .55rem;
+    margin-bottom: .5rem;
+}
+
+@media (max-width: 991.98px) {
+    #canvasWrapper,
+    #personnelCanvas {
+        min-height: 560px;
+    }
+
+    .personnel-card {
+        width: 220px;
+    }
+}
