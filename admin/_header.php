@@ -1,4 +1,7 @@
 ﻿<?php
+if (!headers_sent()) {
+    header('Content-Type: text/html; charset=UTF-8');
+}
 $currentPage = basename(isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : '');
 ?>
 <!DOCTYPE html>
@@ -113,7 +116,14 @@ $currentPage = basename(isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : '')
             <div class="navbar-nav ms-auto">
                 <a class="nav-link <?= ($currentPage === 'dashboard.php') ? 'active' : '' ?>" href="/nurse_srnh/admin/dashboard.php">Dashboard</a>
                 <a class="nav-link <?= ($currentPage === 'content.php') ? 'active' : '' ?>" href="/nurse_srnh/admin/content.php">Content CRUD</a>
-                <a class="nav-link <?= ($currentPage === 'personnel.php') ? 'active' : '' ?>" href="/nurse_srnh/admin/personnel.php">ทำเนียบบุคลากร</a>
+                <a class="nav-link <?= ($currentPage === 'personnel.php') ? 'active' : '' ?>" href="/nurse_srnh/admin/personnel.php">Personnel Directory</a>
+                <a class="nav-link <?= ($currentPage === 'staff.php') ? 'active' : '' ?>" href="/nurse_srnh/admin/staff.php">Staff Manager</a>
+                <a class="nav-link <?= ($currentPage === 'positions.php') ? 'active' : '' ?>" href="/nurse_srnh/admin/positions.php">Position Manager</a>
+                <a class="nav-link <?= ($currentPage === 'position_levels.php') ? 'active' : '' ?>" href="/nurse_srnh/admin/position_levels.php">Position Levels</a>
+                <a class="nav-link <?= ($currentPage === 'workgroups.php') ? 'active' : '' ?>" href="/nurse_srnh/admin/workgroups.php">Workgroups</a>
+                <a class="nav-link <?= ($currentPage === 'subdepartments.php') ? 'active' : '' ?>" href="/nurse_srnh/admin/subdepartments.php">Subdepartments</a>
+                <a class="nav-link <?= ($currentPage === 'org_chart.php') ? 'active' : '' ?>" href="/nurse_srnh/admin/org_chart.php">Organization Chart</a>
+                <a class="nav-link <?= ($currentPage === 'departments.php') ? 'active' : '' ?>" href="/nurse_srnh/admin/departments.php">Departments</a>
                 <a class="nav-link <?= ($currentPage === 'settings.php') ? 'active' : '' ?>" href="/nurse_srnh/admin/settings.php">Settings</a>
                 <a class="nav-link" href="/nurse_srnh/admin/logout.php">Logout</a>
             </div>
@@ -121,4 +131,6 @@ $currentPage = basename(isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : '')
     </div>
 </nav>
 <main class="container admin-shell pb-5">
+
+
 

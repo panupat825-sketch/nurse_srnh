@@ -90,7 +90,9 @@ try {
 }
 
 $siteTitle = isset($settings['site_title']) && trim($settings['site_title']) !== '' ? $settings['site_title'] : 'Nurse SRNH';
-$siteSubtitle = isset($settings['site_subtitle']) && trim($settings['site_subtitle']) !== '' ? $settings['site_subtitle'] : 'พื้นที่แสดงผลงาน ทำเนียบ และลิงก์สำคัญของกลุ่มการพยาบาล';
+$siteSubtitle = isset($settings['site_subtitle']) && trim($settings['site_subtitle']) !== ''
+    ? $settings['site_subtitle']
+    : 'พื้นที่แสดงผลงาน ทำเนียบบุคลากร และลิงก์สำคัญของกลุ่มการพยาบาล';
 $contactAddress = isset($settings['contact_address']) ? $settings['contact_address'] : '182 M.15 Sikeaw Sirattana Sisaket';
 $contactPhone = isset($settings['contact_phone']) ? $settings['contact_phone'] : '045677014';
 $contactEmail = isset($settings['contact_email']) ? $settings['contact_email'] : 'admin@example.com';
@@ -98,35 +100,95 @@ $facebookUrl = isset($settings['facebook_url']) ? $settings['facebook_url'] : 'h
 
 if (count($sections['achievements']) === 0) {
     $sections['achievements'] = array(
-        array('title' => 'พัฒนาคุณภาพการพยาบาล', 'subtitle' => 'Quality Improvement', 'body' => 'สรุปผลการพัฒนาคุณภาพและตัวชี้วัดบริการประจำปี', 'url' => '', 'image_path' => 'img/blog-1.jpg'),
-        array('title' => 'ผลงานวิชาการ', 'subtitle' => 'Academic Works', 'body' => 'รวบรวมบทความ งานประชุม และนวัตกรรมของทีมพยาบาล', 'url' => '', 'image_path' => 'img/blog-2.jpg'),
-        array('title' => 'รางวัลและการยกย่อง', 'subtitle' => 'Awards', 'body' => 'ผลงานโดดเด่นที่ได้รับการยอมรับระดับหน่วยงาน/เขต', 'url' => '', 'image_path' => 'img/blog-3.jpg'),
+        array(
+            'title' => 'พัฒนาคุณภาพการพยาบาล',
+            'subtitle' => 'Quality Improvement',
+            'body' => 'ติดตามตัวชี้วัดสำคัญและพัฒนาแนวทางการดูแลผู้ป่วยอย่างต่อเนื่อง',
+            'url' => '',
+            'image_path' => 'img/blog-1.jpg'
+        ),
+        array(
+            'title' => 'ผลงานวิชาการ',
+            'subtitle' => 'Academic Works',
+            'body' => 'รวบรวมผลงานวิจัยและการพัฒนาองค์ความรู้ของทีมพยาบาล',
+            'url' => '',
+            'image_path' => 'img/blog-2.jpg'
+        ),
+        array(
+            'title' => 'รางวัลและความภาคภูมิใจ',
+            'subtitle' => 'Awards',
+            'body' => 'นำเสนอรางวัลที่บุคลากรและหน่วยงานได้รับจากการปฏิบัติงานที่โดดเด่น',
+            'url' => '',
+            'image_path' => 'img/blog-3.jpg'
+        ),
     );
 }
 
 if (count($sections['directory']) === 0) {
     $sections['directory'] = array(
-        array('title' => 'หัวหน้ากลุ่มการพยาบาล', 'subtitle' => 'Nurse Director', 'body' => 'ดูแลภาพรวมและการบริหารงานพยาบาล', 'url' => '', 'image_path' => 'img/team-1.jpg'),
-        array('title' => 'หัวหน้าหอผู้ป่วย', 'subtitle' => 'Ward Supervisor', 'body' => 'ดูแลมาตรฐานบริการและการประสานงานทีม', 'url' => '', 'image_path' => 'img/team-2.jpg'),
-        array('title' => 'ผู้ประสานงานวิชาการ', 'subtitle' => 'Academic Coordinator', 'body' => 'สนับสนุนการพัฒนาความรู้และวิจัย', 'url' => '', 'image_path' => 'img/team-3.jpg'),
-        array('title' => 'ผู้ประสานงานคุณภาพ', 'subtitle' => 'Quality Coordinator', 'body' => 'กำกับ KPI และการประเมินคุณภาพ', 'url' => '', 'image_path' => 'img/team-4.jpg'),
+        array(
+            'title' => 'ผู้อำนวยการฝ่ายการพยาบาล',
+            'subtitle' => 'Nurse Director',
+            'body' => 'กำกับนโยบายและวางแผนบริการพยาบาลภาพรวม',
+            'url' => '',
+            'image_path' => 'img/team-1.jpg'
+        ),
+        array(
+            'title' => 'หัวหน้าหอผู้ป่วย',
+            'subtitle' => 'Ward Supervisor',
+            'body' => 'บริหารจัดการทีมพยาบาลและการให้บริการในหอผู้ป่วย',
+            'url' => '',
+            'image_path' => 'img/team-2.jpg'
+        ),
+        array(
+            'title' => 'ผู้ประสานงานวิชาการ',
+            'subtitle' => 'Academic Coordinator',
+            'body' => 'ส่งเสริมองค์ความรู้และการพัฒนาศักยภาพบุคลากร',
+            'url' => '',
+            'image_path' => 'img/team-3.jpg'
+        ),
+        array(
+            'title' => 'ผู้ประสานงานคุณภาพ',
+            'subtitle' => 'Quality Coordinator',
+            'body' => 'ติดตามผลลัพธ์คุณภาพและขับเคลื่อนการปรับปรุงบริการ',
+            'url' => '',
+            'image_path' => 'img/team-4.jpg'
+        ),
     );
 }
 
 if (count($sections['links']) === 0) {
     $sections['links'] = array(
-        array('title' => 'Dashboard ตัวชี้วัด', 'subtitle' => 'ข้อมูลบริการ', 'body' => 'แดชบอร์ดสถิติและผลการดำเนินงาน', 'url' => 'http://sirattanahosp.moph.go.th/dashboard/', 'image_path' => ''),
-        array('title' => 'แบบฟอร์มรายงานการพยาบาล', 'subtitle' => 'Google Sheet', 'body' => 'อัปเดตข้อมูลรายงานประจำหน่วยงาน', 'url' => 'https://docs.google.com/', 'image_path' => ''),
-        array('title' => 'THAILAND NURSING DIGITAL PLATFORM', 'subtitle' => 'บริการภายนอก', 'body' => 'ระบบสนับสนุนวิชาชีพการพยาบาล', 'url' => 'https://www.don.go.th/nperson/app/index.php/member/login', 'image_path' => ''),
+        array(
+            'title' => 'Dashboard ตัวชี้วัด',
+            'subtitle' => 'รายงานภาพรวม',
+            'body' => 'เข้าดูข้อมูลสถิติและตัวชี้วัดการดำเนินงานของหน่วยงาน',
+            'url' => 'http://sirattanahosp.moph.go.th/dashboard/',
+            'image_path' => ''
+        ),
+        array(
+            'title' => 'เอกสารงานกลุ่มการพยาบาล',
+            'subtitle' => 'Google Sheet',
+            'body' => 'เข้าถึงแบบฟอร์มและเอกสารสำหรับการทำงานร่วมกัน',
+            'url' => 'https://docs.google.com/',
+            'image_path' => ''
+        ),
+        array(
+            'title' => 'Thailand Nursing Digital Platform',
+            'subtitle' => 'ระบบวิชาชีพพยาบาล',
+            'body' => 'เชื่อมต่อระบบดิจิทัลสำหรับงานวิชาชีพและการพัฒนาบุคลากร',
+            'url' => 'https://www.don.go.th/nperson/app/index.php/member/login',
+            'image_path' => ''
+        ),
     );
 }
 
 if (count($sections['activity']) === 0) {
     $sections['activity'] = array(
-        array('title' => 'กิจกรรม 1', 'image_path' => 'activity/activity1.jpg'),
-        array('title' => 'กิจกรรม 2', 'image_path' => 'activity/activity2.jpg'),
-        array('title' => 'กิจกรรม 3', 'image_path' => 'activity/activity3.jpg'),
-        array('title' => 'กิจกรรม 4', 'image_path' => 'activity/activity4.jpg'),
+        array('title' => 'กิจกรรมที่ 1', 'image_path' => 'activity/activity1.jpg'),
+        array('title' => 'กิจกรรมที่ 2', 'image_path' => 'activity/activity2.jpg'),
+        array('title' => 'กิจกรรมที่ 3', 'image_path' => 'activity/activity3.jpg'),
+        array('title' => 'กิจกรรมที่ 4', 'image_path' => 'activity/activity4.jpg'),
     );
 }
 ?>
@@ -137,7 +199,7 @@ if (count($sections['activity']) === 0) {
     <title><?= e($siteTitle) ?></title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="Nurse Portfolio, Directory, Links" name="keywords">
-    <meta content="เว็บไซต์กลุ่มการพยาบาลสำหรับแสดงผลงาน ทำเนียบ และลิงก์สำคัญ" name="description">
+    <meta content="เว็บไซต์แสดงผลงาน ทำเนียบบุคลากร และลิงก์สำคัญของกลุ่มการพยาบาล" name="description">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -303,7 +365,7 @@ if (count($sections['activity']) === 0) {
         <div class="collapse navbar-collapse" id="navMain">
             <div class="navbar-nav ms-auto">
                 <a class="nav-link" href="#achievements">ผลงาน</a>
-                <a class="nav-link" href="#directory">ทำเนียบ</a>
+                <a class="nav-link" href="org_ch.php">ทำเนียบบุคลากร</a>
                 <a class="nav-link" href="#links">ลิงก์สำคัญ</a>
                 <a class="nav-link" href="#activity">กิจกรรม</a>
                 <a class="nav-link" href="admin/login.php">หลังบ้าน</a>
@@ -320,9 +382,9 @@ if (count($sections['activity']) === 0) {
                 <h1 class="display-5 fw-bold mb-3"><?= e($siteTitle) ?></h1>
                 <p class="lead mb-4"><?= e($siteSubtitle) ?></p>
                 <div class="d-flex flex-wrap gap-2">
-                    <a href="#achievements" class="btn btn-light">ดูผลงาน</a>
-                    <a href="#links" class="btn btn-accent">ลิงก์ใช้งานด่วน</a>
-                    <a href="<?= e($facebookUrl) ?>" class="btn btn-outline-light" target="_blank">Facebook</a>
+                    <a href="#achievements" class="btn btn-light">ชมผลงาน</a>
+                    <a href="#links" class="btn btn-accent">เข้าสู่ลิงก์สำคัญ</a>
+                    <a href="<?= e($facebookUrl) ?>" class="btn btn-outline-light" target="_blank" rel="noopener">Facebook</a>
                 </div>
             </div>
             <div class="col-lg-4 text-lg-end">
@@ -333,8 +395,8 @@ if (count($sections['activity']) === 0) {
 
     <section id="achievements" class="section-block p-4 p-md-5 mb-4 mb-md-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="section-title h3 mb-0">ผลงานเด่นกลุ่มการพยาบาล</h2>
-            <a href="managed-content.php?section=achievements" class="btn btn-sm btn-outline-secondary" target="_blank">ดูทั้งหมด</a>
+            <h2 class="section-title h3 mb-0">ผลงานเด่นของกลุ่มการพยาบาล</h2>
+            <a href="managed-content.php?section=achievements" class="btn btn-sm btn-outline-secondary" target="_blank" rel="noopener">ดูทั้งหมด</a>
         </div>
         <div class="row g-3 g-md-4">
             <?php foreach ($sections['achievements'] as $item): ?>
@@ -350,7 +412,7 @@ if (count($sections['activity']) === 0) {
                             <?php endif; ?>
                             <p class="mb-3"><?= e(isset($item['body']) ? $item['body'] : '') ?></p>
                             <?php if (isset($item['url']) && trim($item['url']) !== ''): ?>
-                                <a class="btn btn-sm btn-brand" href="<?= e($item['url']) ?>" target="_blank">เปิดรายละเอียด</a>
+                                <a class="btn btn-sm btn-brand" href="<?= e($item['url']) ?>" target="_blank" rel="noopener">อ่านเพิ่มเติม</a>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -361,8 +423,8 @@ if (count($sections['activity']) === 0) {
 
     <section id="directory" class="section-block p-4 p-md-5 mb-4 mb-md-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="section-title h3 mb-0">ทำเนียบบุคลากรพยาบาล</h2>
-            <a href="managed-content.php?section=directory" class="btn btn-sm btn-outline-secondary" target="_blank">ดูข้อมูลตาราง</a>
+            <h2 class="section-title h3 mb-0">ทำเนียบบุคลากรกลุ่มการพยาบาล</h2>
+            <a href="org_ch.php" class="btn btn-sm btn-outline-secondary">ดูโครงสร้างแบบแผนผัง</a>
         </div>
         <div class="row g-3 g-md-4">
             <?php foreach ($sections['directory'] as $member): ?>
@@ -382,8 +444,8 @@ if (count($sections['activity']) === 0) {
 
     <section id="links" class="section-block p-4 p-md-5 mb-4 mb-md-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="section-title h3 mb-0">ลิงก์สำคัญสำหรับงานพยาบาล</h2>
-            <a href="admin/content.php?section=links" class="btn btn-sm btn-outline-secondary" target="_blank">จัดการลิงก์</a>
+            <h2 class="section-title h3 mb-0">ลิงก์สำคัญสำหรับการทำงาน</h2>
+            <a href="admin/content.php?section=links" class="btn btn-sm btn-outline-secondary" target="_blank" rel="noopener">แก้ไขลิงก์</a>
         </div>
         <div class="row g-3 g-md-4">
             <?php foreach ($sections['links'] as $link): ?>
@@ -393,7 +455,7 @@ if (count($sections['activity']) === 0) {
                         <p class="muted mb-2"><?= e(isset($link['subtitle']) ? $link['subtitle'] : '') ?></p>
                         <p class="mb-3"><?= e(isset($link['body']) ? $link['body'] : '') ?></p>
                         <?php if (isset($link['url']) && trim($link['url']) !== ''): ?>
-                            <a class="btn btn-sm btn-brand" href="<?= e($link['url']) ?>" target="_blank"><i class="bi bi-box-arrow-up-right me-1"></i> ไปยังลิงก์</a>
+                            <a class="btn btn-sm btn-brand" href="<?= e($link['url']) ?>" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right me-1"></i> ไปยังลิงก์</a>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -404,13 +466,13 @@ if (count($sections['activity']) === 0) {
     <section id="activity" class="section-block p-4 p-md-5 mb-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="section-title h3 mb-0">ภาพกิจกรรม</h2>
-            <a href="admin/content.php?section=activity" class="btn btn-sm btn-outline-secondary" target="_blank">จัดการกิจกรรม</a>
+            <a href="admin/content.php?section=activity" class="btn btn-sm btn-outline-secondary" target="_blank" rel="noopener">แก้ไขกิจกรรม</a>
         </div>
         <div class="row g-3 g-md-4">
             <?php foreach ($sections['activity'] as $act): ?>
                 <?php if (!isset($act['image_path']) || trim($act['image_path']) === '') { continue; } ?>
                 <div class="col-6 col-md-4 col-xl-3">
-                    <a class="activity-card d-block" href="<?= e(normalize_asset_url($act['image_path'])) ?>" target="_blank">
+                    <a class="activity-card d-block" href="<?= e(normalize_asset_url($act['image_path'])) ?>" target="_blank" rel="noopener">
                         <img src="<?= e(normalize_asset_url($act['image_path'])) ?>" class="activity-image" alt="<?= e(isset($act['title']) ? $act['title'] : 'activity') ?>">
                         <div class="p-2 small muted text-center"><?= e(isset($act['title']) ? $act['title'] : 'กิจกรรม') ?></div>
                     </a>
@@ -423,14 +485,14 @@ if (count($sections['activity']) === 0) {
         <div class="row g-3 align-items-center">
             <div class="col-lg-6">
                 <h3 class="h4 mb-2"><?= e($siteTitle) ?></h3>
-                <p class="mb-0">เว็บไซต์เพื่อการสื่อสารผลงานและข้อมูลสำคัญของกลุ่มการพยาบาล</p>
+                <p class="mb-0">แหล่งรวมข้อมูลผลงาน บุคลากร และช่องทางสำคัญของกลุ่มการพยาบาล</p>
             </div>
             <div class="col-lg-6">
                 <div class="small">
                     <div><i class="bi bi-geo-alt me-2"></i><?= e($contactAddress) ?></div>
                     <div><i class="bi bi-telephone me-2"></i><?= e($contactPhone) ?></div>
                     <div><i class="bi bi-envelope me-2"></i><?= e($contactEmail) ?></div>
-                    <div class="mt-2"><a href="<?= e($facebookUrl) ?>" target="_blank"><i class="bi bi-facebook me-2"></i>ติดตาม Facebook</a></div>
+                    <div class="mt-2"><a href="<?= e($facebookUrl) ?>" target="_blank" rel="noopener"><i class="bi bi-facebook me-2"></i>ติดตามบน Facebook</a></div>
                 </div>
             </div>
         </div>

@@ -1,15 +1,28 @@
-﻿<?php
+<?php
+
+ob_start();
 
 require_once __DIR__ . '/../bootstrap.php';
 
-require_admin_login();
-
 header('Content-Type: application/json; charset=UTF-8');
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo json_encode(array('success' => false, 'message' => 'Method not allowed'));
+function ajax_json_response($payload, $statusCode)
+{
+    while (ob_get_level() > 0) {
+        ob_end_clean();
+    }
+
+    http_response_code((int)$statusCode);
+    echo json_encode($payload, JSON_UNESCAPED_UNICODE);
     exit;
+}
+
+if (!is_admin_logged_in()) {
+    ajax_json_response(array('success' => false, 'message' => 'Unauthorized'), 401);
+}
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    ajax_json_response(array('success' => false, 'message' => 'Method not allowed'), 405);
 }
 
 $payload = json_decode((string)file_get_contents('php://input'), true);
@@ -23,12 +36,10 @@ $relationType = trim(isset($payload['relation_type']) ? (string)$payload['relati
 $lineStyle = trim(isset($payload['line_style']) ? (string)$payload['line_style'] : 'solid');
 
 if ($sourceId <= 0 || $targetId <= 0) {
-    echo json_encode(array('success' => false, 'message' => 'ข้อมูลต้นทาง/ปลายทางไม่ถูกต้อง'), JSON_UNESCAPED_UNICODE);
-    exit;
+    ajax_json_response(array('success' => false, 'message' => 'Invalid source/target'), 400);
 }
 if ($sourceId === $targetId) {
-    echo json_encode(array('success' => false, 'message' => 'ไม่สามารถเชื่อมรายการเดียวกันได้'), JSON_UNESCAPED_UNICODE);
-    exit;
+    ajax_json_response(array('success' => false, 'message' => 'Source and target cannot be same'), 400);
 }
 if ($relationType === '') {
     $relationType = 'direct';
@@ -49,8 +60,7 @@ $stmt->execute(array(
 ));
 $existsCount = (int)$stmt->fetchColumn();
 if ($existsCount < 2) {
-    echo json_encode(array('success' => false, 'message' => 'ไม่พบบุคลากรที่ต้องการเชื่อมบางรายการ'), JSON_UNESCAPED_UNICODE);
-    exit;
+    ajax_json_response(array('success' => false, 'message' => 'Personnel not found'), 400);
 }
 
 $stmt = $db->prepare('SELECT id FROM personnel_connections
@@ -61,15 +71,14 @@ $stmt->execute(array(
     'source_id' => $sourceId,
     'target_id' => $targetId,
 ));
-$duplicate = $stmt->fetch();
+$duplicate = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if ($duplicate) {
-    echo json_encode(array(
+    ajax_json_response(array(
         'success' => true,
-        'message' => 'มีเส้นเชื่อมนี้อยู่แล้ว',
+        'message' => 'Connection already exists',
         'connection_id' => (int)$duplicate['id'],
-    ), JSON_UNESCAPED_UNICODE);
-    exit;
+    ), 200);
 }
 
 $stmt = $db->prepare('INSERT INTO personnel_connections (
@@ -93,8 +102,8 @@ $stmt->execute(array(
     'line_style' => $lineStyle,
 ));
 
-echo json_encode(array(
+ajax_json_response(array(
     'success' => true,
-    'message' => 'บันทึกเส้นเชื่อมเรียบร้อยแล้ว',
+    'message' => 'Connection saved',
     'connection_id' => (int)$db->lastInsertId(),
-), JSON_UNESCAPED_UNICODE);
+), 200);

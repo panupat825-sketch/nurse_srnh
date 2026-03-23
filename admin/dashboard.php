@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 require_once __DIR__ . '/../bootstrap.php';
 require_once __DIR__ . '/../lib/content_repository.php';
@@ -81,6 +81,7 @@ include __DIR__ . '/_header.php';
             <div class="d-grid gap-2">
                 <a href="/nurse_srnh/admin/content.php" class="btn btn-brand">เพิ่ม/แก้ไขเนื้อหา</a>
                 <a href="/nurse_srnh/admin/personnel.php" class="btn btn-outline-primary">จัดการทำเนียบบุคลากร</a>
+                <a href="/nurse_srnh/admin/departments.php" class="btn btn-outline-primary">จัดการแผนก</a>
                 <a href="/nurse_srnh/admin/settings.php" class="btn btn-outline-secondary">ตั้งค่าเว็บไซต์</a>
                 <a href="/nurse_srnh/managed-content.php?section=activity" target="_blank" class="btn btn-outline-secondary">ดูหน้า activity</a>
                 <a href="/nurse_srnh/index.php" target="_blank" class="btn btn-outline-secondary">ดูหน้าเว็บไซต์หลัก</a>

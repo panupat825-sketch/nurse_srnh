@@ -101,19 +101,20 @@
         var allowedExt = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
 
         if (file.size > maxSize) {
-            showMessage('ไฟล์รูปต้องมีขนาดไม่เกิน 5MB');
+            showMessage('Image file must be <= 5MB.');
             refs.formImageInput.value = '';
             return false;
         }
 
         if (allowedTypes.indexOf(file.type) === -1 && allowedExt.indexOf(ext) === -1) {
-            showMessage('รองรับเฉพาะไฟล์ jpg, jpeg, png, gif, webp เท่านั้น');
+            showMessage('Allowed image types: jpg, jpeg, png, gif, webp.');
             refs.formImageInput.value = '';
             return false;
         }
 
         return true;
     }
+
     function getFilterParams() {
         return {
             search: refs.searchInput ? refs.searchInput.value.trim() : '',
@@ -125,8 +126,17 @@
 
     function fetchJson(url, options) {
         return fetch(url, options || {}).then(function (response) {
-            return response.json().catch(function () {
-                return { success: false, message: 'Invalid JSON response' };
+            return response.text().then(function (text) {
+                var cleaned = (text || '').replace(/^\uFEFF/, '').trim();
+                try {
+                    return JSON.parse(cleaned);
+                } catch (err) {
+                    var preview = cleaned.substring(0, 180);
+                    return {
+                        success: false,
+                        message: 'Invalid JSON response (HTTP ' + response.status + '): ' + preview
+                    };
+                }
             });
         });
     }
@@ -146,7 +156,7 @@
         return fetchJson(endpoints.load + '?' + params.toString())
             .then(function (res) {
                 if (!res || !res.success) {
-                    throw new Error((res && res.message) || 'ไม่สามารถโหลดข้อมูลได้');
+                    throw new Error((res && res.message) || 'Unable to load data.');
                 }
 
                 state.personnel = Array.isArray(res.personnel) ? res.personnel : [];
@@ -158,7 +168,7 @@
                 setDirty(false);
             })
             .catch(function (err) {
-                showMessage(err.message || 'ไม่สามารถโหลดข้อมูลได้');
+                showMessage(err.message || 'Unable to load data.');
             });
     }
 
@@ -218,13 +228,13 @@
             '   </div>',
             '   <div class="personnel-card-foot">',
             '       <div class="small text-soft">',
-            '           โทร: ', escapeHtml(person.phone || '-'), ' | ภายใน: ', escapeHtml(person.internal_phone || '-'),
+            '           Phone: ', escapeHtml(person.phone || '-'), ' | Internal: ', escapeHtml(person.internal_phone || '-'),
             '       </div>',
             '       <div class="d-flex flex-wrap gap-1 mt-2">',
             '           ', statusBadge,
-            '           <button type="button" class="btn btn-sm btn-outline-primary js-edit">แก้ไข</button>',
-            '           <button type="button" class="btn btn-sm btn-outline-danger js-delete">ลบ</button>',
-            '           <button type="button" class="btn btn-sm btn-outline-secondary js-link">เชื่อม</button>',
+            '           <button type="button" class="btn btn-sm btn-outline-primary js-edit">Edit</button>',
+            '           <button type="button" class="btn btn-sm btn-outline-danger js-delete">Delete</button>',
+            '           <button type="button" class="btn btn-sm btn-outline-secondary js-link">Connect</button>',
             '       </div>',
             '   </div>',
             '</div>'
@@ -423,21 +433,27 @@
         });
     }
 
-    function openAddModal() {
+    function openAddModal(preselectedParentId) {
         if (!refs.form) {
             return;
         }
 
+        var selectedParent = preselectedParentId == null ? '' : String(preselectedParentId);
+
         refs.form.reset();
         refs.formId.value = '';
         refs.formExistingImage.value = '';
-        refs.modalLabel.textContent = 'เพิ่มบุคลากร';
+        refs.modalLabel.textContent = 'Add Personnel';
         refs.formSortOrder.value = '0';
         refs.formStatus.value = '1';
         refs.currentImageWrap.classList.add('d-none');
         refs.currentImagePreview.setAttribute('src', '');
         refs.removeProfileImage.checked = false;
-        renderParentOptions('', null);
+        renderParentOptions(selectedParent, null);
+
+        if (refs.formParentId && selectedParent !== '') {
+            refs.formParentId.value = selectedParent;
+        }
 
         if (bsModal) {
             bsModal.show();
@@ -463,7 +479,7 @@
         refs.formNote.value = person.note || '';
         refs.formImageInput.value = '';
         refs.removeProfileImage.checked = false;
-        refs.modalLabel.textContent = 'แก้ไขบุคลากร #' + person.id;
+        refs.modalLabel.textContent = 'Edit Personnel #' + person.id;
 
         renderParentOptions(person.parent_id, person.id);
 
@@ -486,7 +502,7 @@
         }
 
         var selected = selectedId == null ? '' : String(selectedId);
-        var html = ['<option value="">- ไม่ระบุ -</option>'];
+        var html = ['<option value="">- None -</option>'];
 
         state.personnel.forEach(function (person) {
             if (currentId !== null && toInt(person.id, 0) === toInt(currentId, 0)) {
@@ -507,7 +523,7 @@
 
         var person = findPersonById(id);
         var name = person ? person.full_name : ('#' + id);
-        if (!window.confirm('ยืนยันการลบข้อมูลบุคลากร: ' + name + ' ?')) {
+        if (!window.confirm('Delete personnel: ' + name + ' ?')) {
             return;
         }
 
@@ -549,30 +565,30 @@
             line_style: 'solid'
         }).then(function (res) {
             if (!res || !res.success) {
-                showMessage((res && res.message) || 'ไม่สามารถบันทึกเส้นเชื่อมได้');
+                showMessage((res && res.message) || 'Unable to save connection.');
                 return;
             }
             loadData();
         }).catch(function () {
-            showMessage('ไม่สามารถบันทึกเส้นเชื่อมได้');
+            showMessage('Unable to save connection.');
         });
     }
 
     function deleteConnection(connectionId) {
-        if (!window.confirm('ยืนยันการลบเส้นเชื่อมนี้?')) {
+        if (!window.confirm('Delete this connection?')) {
             return;
         }
 
         postJson(endpoints.deleteConnection, { id: connectionId })
             .then(function (res) {
                 if (!res || !res.success) {
-                    showMessage((res && res.message) || 'ไม่สามารถลบเส้นเชื่อมได้');
+                    showMessage((res && res.message) || 'Unable to delete connection.');
                     return;
                 }
                 loadData();
             })
             .catch(function () {
-                showMessage('ไม่สามารถลบเส้นเชื่อมได้');
+                showMessage('Unable to delete connection.');
             });
     }
 
@@ -582,7 +598,7 @@
         }
 
         if (!state.connections.length) {
-            refs.connectionList.innerHTML = '<div class="small text-muted">ยังไม่มีเส้นเชื่อม</div>';
+            refs.connectionList.innerHTML = '<div class="small text-muted">No connections yet.</div>';
             return;
         }
 
@@ -599,8 +615,8 @@
             html.push(
                 '<div class="connection-item">' +
                 '   <div class="small fw-semibold">' + escapeHtml(source.full_name) + '</div>' +
-                '   <div class="small text-soft">ไปยัง: ' + escapeHtml(target.full_name) + '</div>' +
-                '   <button type="button" class="btn btn-sm btn-outline-danger mt-1 js-delete-connection" data-id="' + escapeHtml(conn.id) + '">ลบเส้น</button>' +
+                '   <div class="small text-soft">to: ' + escapeHtml(target.full_name) + '</div>' +
+                '   <button type="button" class="btn btn-sm btn-outline-danger mt-1 js-delete-connection" data-id="' + escapeHtml(conn.id) + '">Delete line</button>' +
                 '</div>'
             );
         });
@@ -636,22 +652,22 @@
     function saveLayout() {
         var positions = collectLayoutPayload();
         if (!positions.length) {
-            showMessage('ไม่พบข้อมูล layout ที่ต้องบันทึก');
+            showMessage('No layout positions to save.');
             return;
         }
 
         postJson(endpoints.saveLayout, { positions: positions })
             .then(function (res) {
                 if (!res || !res.success) {
-                    showMessage((res && res.message) || 'ไม่สามารถบันทึก layout ได้');
+                    showMessage((res && res.message) || 'Unable to save layout.');
                     return;
                 }
                 setDirty(false);
-                showMessage('บันทึก layout เรียบร้อยแล้ว');
+                showMessage('Layout saved.');
                 loadData();
             })
             .catch(function () {
-                showMessage('ไม่สามารถบันทึก layout ได้');
+                showMessage('Unable to save layout.');
             });
     }
 
@@ -726,7 +742,7 @@
     }
 
     function resetLayout() {
-        if (!window.confirm('ต้องการรีเซ็ต layout เป็นค่าเริ่มต้นหรือไม่?')) {
+        if (!window.confirm('Reset layout to default?')) {
             return;
         }
 
@@ -746,7 +762,6 @@
         saveLayout();
     }
 
-
     function bindFormEvents() {
         if (refs.formImageInput) {
             refs.formImageInput.addEventListener('change', function () {
@@ -762,6 +777,7 @@
             });
         }
     }
+
     function bindToolbarEvents() {
         if (refs.btnApplyFilter) {
             refs.btnApplyFilter.addEventListener('click', function () {
@@ -846,6 +862,14 @@
 
     bindToolbarEvents();
     bindFormEvents();
-    loadData();
-})();
 
+    var startParams = new URLSearchParams(window.location.search);
+    var shouldOpenAdd = startParams.get('action') === 'add';
+    var initialParentId = (startParams.get('parent_id') || '').trim();
+
+    loadData().then(function () {
+        if (shouldOpenAdd) {
+            openAddModal(initialParentId);
+        }
+    });
+})();
